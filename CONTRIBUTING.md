@@ -1,0 +1,39 @@
+# Contributing
+Thank you for your interest in contributing to this project. Open source powers the modern web and countless other projects.
+
+## Found a bug?
+Before opening an issue, check whether the bug has already been reported or fixed.
+
+If both check out, make sure you have the following details:
+- Version or Commit
+- What problems the bug causes
+- Any additional details, such as screenshots or log files
+
+Please don't report any security vulnerabilities to issues.
+
+## Wrote a patch for a bug?
+If you wrote a patch for a bug, you can open a Pull Request and submit the patch.
+
+Please include the following information:
+- What issue is this PR related
+- Is it even related to a issue
+- Quick summary of changes
+- If includes multiple changes, list of changes/fixes and feature additions
+
+## Want to see a feature?
+If you want to see a certain feature added, you can open a issue to request for it.
+
+Following information required:
+- Why do you want this feature?
+- How would this feature be useful?
+
+## Implementing features
+Fork the repository and implement the feature in your fork.
+
+When opening an PR, make sure you have following info:
+- Is this reported as a feature request
+- Does the PR also include bug fixes?
+- Issues listed what it closes
+
+
+We're happy to receive contributions of all sizes. Thank you for helping improve the project!
