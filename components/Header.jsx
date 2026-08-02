@@ -10,7 +10,7 @@ const Header = () => {
           <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold px-4 rounded">
             <Link href="/download">Download</Link>
           </button>
-          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold px-4 rounded ml-3">
+          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold px-4 rounded ml-3 w-55">
             <Link href="/contributing-guidelines">Contributing Guidelines</Link>
           </button>
         </div>
