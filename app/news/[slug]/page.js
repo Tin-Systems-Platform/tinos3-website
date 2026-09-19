@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
@@ -20,7 +22,7 @@ async function getGithubDiscussion(discussionId) {
 
   try {
     const response = await axios.post(
-      'https://api.github.com/graphql',
+      'https://api.github.com/graphql?{Date.now()}',
       { 
         query, 
         variables: { id: decodeURIComponent(discussionId) } 

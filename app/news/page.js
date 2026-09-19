@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
@@ -41,7 +43,7 @@ async function getGithubPosts() {
   `;
 
   try {
-    const response = await axios.post('https://api.github.com/graphql', { query }, {
+    const response = await axios.post('https://api.github.com/graphql?{Date.now()}', { query }, {
       headers: {
         Authorization: `Bearer ${process.env.GITHUB_ACCESS_TOKEN}`,
         'Content-Type': 'application/json',
