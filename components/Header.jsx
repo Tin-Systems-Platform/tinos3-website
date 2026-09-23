@@ -13,13 +13,23 @@ const Header = () => {
           <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold px-4 rounded ml-3 w-55">
             <Link href="/contributing-guidelines">Contributing Guidelines</Link>
           </button>
-          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold px-4 rounded ml-3 w-55">
-            <Link href="/news">News</Link>
-          </button>
+          <Link href="/news">
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold px-4 rounded ml-3 w-20">
+                News
+            </button>
+          </Link>
 
-          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold px-4 rounded ml-3 w-55">
-            <Link href="/stats">Stats</Link>
-          </button>
+          <Link rel="stylesheet" href="/stats" >
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold px-4 rounded ml-3 w-20">
+                Stats
+            </button>
+          </Link>
+
+          <Link rel="stylesheet" href="/issues" >
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold px-4 rounded ml-3 w-20">
+                Issues
+            </button>
+          </Link>          
         </div>
 
     </div>
