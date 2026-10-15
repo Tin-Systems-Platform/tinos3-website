@@ -14,6 +14,7 @@ const page = () => {
 
             <ul>
                 <li><a href="/cosmos-tutorials/tutorial-1">Tutorial 1: Setting up Cosmos gen3</a></li>
+                <li><a href="/cosmos-tutorials/tutorial-2">Tutorial 2: How Cosmos gen3 works and how it slips tasks to .NET</a></li>
             </ul>
         </main>
         <Footer />

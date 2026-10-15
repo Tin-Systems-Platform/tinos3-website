@@ -1,0 +1,108 @@
+# How Cosmos works and how it slips custom tasks to .NET
+Cosmos uses MSBuild to give custom tasks on build time and that is mostly what happens. That is not the only thing what Cosmos does.
+
+## Slipping in custom tasks
+In C# you can use the Microsoft.Build packages for buiding out custom tasks.
+The Task class needs to inherit from Task class or implement ITask interface.
+This means that the C# compiler (or Roslyn) is compiling a dll that has a task for MSBuild to execute.
+
+A example MSBuild is down below.
+```C#
+using Microsoft.Build.Framework;
+using Microsoft.Build.Utilities;
+
+public class SayHelloTask : Task
+{
+    [Required]
+    public string GreetingName { get; set; }
+
+    public override bool Execute()
+    {
+        Log.LogMessage(MessageImportance.High, $"Hello, {GreetingName} from a custom .NET build task!");
+        return true;
+    }
+}
+```
+
+Of course you would have to modify the .csproj file to get it working for that as well, but that would be the code for a really basic task.
+
+## How Cosmos works
+As Cosmos is basicly a API for making Operating Systems using .NET, it also has to provide a lot for the kernel.
+
+Here's what it provides:
+* Filesystems
+* Graphics
+* (Recently added) a Driver kit for making your own drivers
+* Power management via ACPI (Currently LAI, at some point uACPI)
+* Plugged .NET functions, methods and classes
+* Memory management
+* Garbage collector
+* A lot more stuff
+
+### How Cosmos builds your project
+Cosmos gen3 uses .NETs NativeAOT to compile a .ISO file and to boot it uses limine.
+
+So here's the flow chart on kernel compilation:
+```mermaid
+flowchart TD
+    CS[C# Source Code] --> ROSLYN[Roslyn Compiler]
+    PLUGS[Plug Definitions] --> ANALYZER[Cosmos.Build.Analyzer.Patcher]
+    ANALYZER -.-> |Validates| ROSLYN
+    ROSLYN --> IL[IL Assembly]
+
+    subgraph "Cosmos.Build.Patcher"
+        PATCHER[IL Patcher]
+        PATCHER --> |cosmos.patcher| PATCHED[Patched Assemblies]
+        PATCHED --> COSMOS_REF["$(IntermediateOutputPath)/cosmos/ref/"]
+        PATCHED --> COSMOS_ROOT["$(IntermediateOutputPath)/cosmos/"]
+    end
+    IL --> PATCHER
+    PLUGS --> PATCHER
+
+    subgraph "Cosmos.Build.Ilc"
+        ILC[NativeAOT Compiler]
+        ILC --> |ilc| NATIVE["Native Object (.o)"]
+        NATIVE --> COSMOS_NATIVE["$(IntermediateOutputPath)/cosmos/native/"]
+    end
+    COSMOS_REF --> ILC
+    COSMOS_ROOT --> ILC
+
+    subgraph "Cosmos.Build.Asm"
+        ASM_BUILD[Clang Integrated Assembler]
+        ASM_BUILD --> |clang --target=...-elf -c| ASM_OBJ["Assembly Objects (.obj)"]
+        ASM_OBJ --> COSMOS_ASM["$(IntermediateOutputPath)/cosmos/asm/"]
+    end
+    ASM_SRC["Assembly Files (.s)"] --> ASM_BUILD
+
+    subgraph "Cosmos.Build.CC"
+        CC_BUILD[Clang Compiler]
+        CC_BUILD --> |"clang --target=..."| C_OBJ["C Objects (.obj)"]
+        C_OBJ --> COSMOS_COBJ["$(IntermediateOutputPath)/cosmos/cobj/"]
+    end
+    C_SRC["C Source Files (.c)"] --> CC_BUILD
+
+    subgraph "Cosmos.Build.Common"
+        LINK[Link Target]
+        LINK --> |ld.lld| ELF["ELF Binary ($(OutputPath)/$(AssemblyName).elf)"]
+        ELF --> FINAL_ISO[BuildISO Target]
+        FINAL_ISO  --> |xorriso + Limine| ISO_OUT["$(OutputPath)/cosmos/$(AssemblyName).iso"]
+        ISO_OUT --> |PublishISO| PUBLISH["$(PublishDir)/$(AssemblyName).iso"]
+    end
+    
+    COSMOS_NATIVE --> LINK
+    COSMOS_ASM --> LINK
+    COSMOS_COBJ --> LINK
+    LINKER_SCRIPT["linker.ld"] --> LINK
+    LIMINE_CONF["limine.conf"] --> FINAL_ISO
+
+    style CS fill:#e1f5e1
+    style ASM_SRC fill:#e1f5e1
+    style C_SRC fill:#e1f5e1
+    style PLUGS fill:#e1f5e1
+    style LINKER_SCRIPT fill:#e1f5e1
+    style LIMINE_CONF fill:#e1f5e1
+    
+    style PUBLISH fill:#ffe1e1
+```
+
+Flowchart from the official Cosmos Gen3 developer documentation. Check the [official documentation](https://cosmosos.github.io/).
