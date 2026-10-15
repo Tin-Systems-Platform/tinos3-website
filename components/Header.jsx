@@ -29,7 +29,12 @@ const Header = () => {
             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold px-4 rounded ml-3 w-20">
                 Issues
             </button>
-          </Link>          
+          </Link>       
+          <Link rel="stylesheet" href="/cosmos-tutorials" >
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold px-4 rounded ml-3 w-25">
+                Tutorials
+            </button>
+          </Link>   
         </div>
 
     </div>
